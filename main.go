@@ -67,6 +67,7 @@ const (
 	validity        = 600
 	defaultMaxCount = 10
 	defaultType     = Latest
+	defaultTheme    = GithubLight
 )
 
 type QueryType int
@@ -74,6 +75,104 @@ type QueryType int
 const (
 	Latest QueryType = iota
 )
+
+type ColorTheme int
+
+const (
+	SolarizedLight ColorTheme = iota
+	GithubLight
+	RosePineDawn
+	QuietLight
+	Dracula
+	GruvBox
+	Nord
+	OneDark
+	Monokai
+	TokyoNight
+)
+
+// ThemeColors holds color values for a theme
+type ThemeColors struct {
+	Primary    string
+	Secondary  string
+	Accent     string
+	Background string
+	Text       string
+}
+
+// ThemeColorMap maps ColorTheme constants to their ThemeColors
+var ThemeColorMap = map[ColorTheme]ThemeColors{
+	SolarizedLight: {
+		Primary:    "#268bd2",
+		Secondary:  "#2aa198",
+		Accent:     "#b58900",
+		Background: "#fdf6e3",
+		Text:       "#657b83",
+	},
+	GithubLight: {
+		Primary:    "#0969da",
+		Secondary:  "#6e7781",
+		Accent:     "#d4a72c",
+		Background: "#ffffff",
+		Text:       "#24292f",
+	},
+	RosePineDawn: {
+		Primary:    "#b4637a",
+		Secondary:  "#ea9d34",
+		Accent:     "#56949f",
+		Background: "#faf4ed",
+		Text:       "#575279",
+	},
+	QuietLight: {
+		Primary:    "#6c6c6c",
+		Secondary:  "#b3b3b3",
+		Accent:     "#ffab70",
+		Background: "#f5f5f5",
+		Text:       "#333333",
+	},
+	Dracula: {
+		Primary:    "#bd93f9",
+		Secondary:  "#ff79c6",
+		Accent:     "#50fa7b",
+		Background: "#282a36",
+		Text:       "#f8f8f2",
+	},
+	GruvBox: {
+		Primary:    "#fabd2f",
+		Secondary:  "#b8bb26",
+		Accent:     "#fe8019",
+		Background: "#282828",
+		Text:       "#ebdbb2",
+	},
+	Nord: {
+		Primary:    "#5e81ac",
+		Secondary:  "#88c0d0",
+		Accent:     "#a3be8c",
+		Background: "#2e3440",
+		Text:       "#d8dee9",
+	},
+	OneDark: {
+		Primary:    "#61afef",
+		Secondary:  "#c678dd",
+		Accent:     "#e5c07b",
+		Background: "#282c34",
+		Text:       "#abb2bf",
+	},
+	Monokai: {
+		Primary:    "#f92672",
+		Secondary:  "#a6e22e",
+		Accent:     "#fd971f",
+		Background: "#272822",
+		Text:       "#f8f8f2",
+	},
+	TokyoNight: {
+		Primary:    "#7aa2f7",
+		Secondary:  "#bb9af7",
+		Accent:     "#7dcfff",
+		Background: "#1a1b26",
+		Text:       "#c0caf5",
+	},
+}
 
 // ------------------------------------------------------------------------------------------------------
 
@@ -98,6 +197,35 @@ func countFromString(countStr string) int {
 		return defaultMaxCount
 	}
 	return count
+}
+
+func themeFromString(themeStr string) ColorTheme {
+	log.Printf("themeFromString called with themeStr: %s", themeStr)
+	switch strings.ToLower(themeStr) {
+	case "solarizedlight":
+		return SolarizedLight
+	case "githublight":
+		return GithubLight
+	case "rosepinedawn":
+		return RosePineDawn
+	case "quietlight":
+		return QuietLight
+	case "dracula":
+		return Dracula
+	case "gruvbox":
+		return GruvBox
+	case "nord":
+		return Nord
+	case "onedark":
+		return OneDark
+	case "monokai":
+		return Monokai
+	case "tokyonight":
+		return TokyoNight
+	default:
+		log.Printf("Unknown theme: %s, defaulting to GithubLight", themeStr)
+		return defaultTheme // Default to GithubLight if unknown
+	}
 }
 
 func getUserData(user string) (RSS2JSONResponse, error) {
@@ -134,7 +262,7 @@ func getUserData(user string) (RSS2JSONResponse, error) {
 	return data.Rss, nil
 }
 
-func parseIt(rss RSS2JSONResponse, queryType QueryType, count int) (string, error) {
+func parseIt(rss RSS2JSONResponse, queryType QueryType, count int, color ThemeColors) (string, error) {
 	log.Printf("parseIt called with queryType: %v", queryType)
 	articles := rss.Items
 	if len(articles) > count {
@@ -161,20 +289,20 @@ func parseIt(rss RSS2JSONResponse, queryType QueryType, count int) (string, erro
 	svg += `
   <defs>
 	<linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-	  <stop offset="0%" stop-color="#f0f4f8"/>
-	  <stop offset="100%" stop-color="#e9eef5"/>
+	  <stop offset="0%" stop-color="` + color.Background + `"/>
+	  <stop offset="100%" stop-color="` + color.Secondary + `"/>
 	</linearGradient>
 	<filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
-	  <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#ccc"/>
+	  <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="` + color.Secondary + `"/>
 	</filter>
   </defs>
   <rect width="100%" height="100%" fill="url(#grad)" />
   <!-- Header -->
   <g transform="translate(30, 30)">
-	<circle cx="30" cy="30" r="30" fill="#fff" />
+	<circle cx="30" cy="30" r="30" fill="` + color.Background + `" />
 	<image href="` + avatar + `" x="0" y="0" width="60" height="60" clip-path="circle(30px at 30px 30px)" />
-	<text x="80" y="28" font-size="24" font-weight="600" fill="#222">` + escapeXML(author) + `</text>
-	<text x="80" y="50" font-size="16" fill="#555">📝 Latest from Medium</text>
+	<text x="80" y="28" font-size="24" font-weight="600" fill="` + color.Primary + `">` + escapeXML(author) + `</text>
+	<text x="80" y="50" font-size="16" fill="` + color.Text + `">📝 Latest from Medium</text>
   </g>
   <!-- Cards Container -->
   <g transform="translate(30, 110)">
@@ -204,18 +332,18 @@ func parseIt(rss RSS2JSONResponse, queryType QueryType, count int) (string, erro
 		}
 		svg += `
 	<g transform="translate(0, ` + intToString(cardYOffset) + `)" filter="url(#cardShadow)">
-	  <rect width="740" height="100" rx="16" ry="16" fill="white" opacity="0.95"/>
+	  <rect width="740" height="100" rx="16" ry="16" fill="` + color.Background + `" opacity="0.95"/>
 	  <a href="` + article.Link + `">
-		<text x="20" y="28" font-size="16" font-weight="600" fill="#2e7dd1">` + escapeXML(trimString(article.Title, 85)) + `</text>
+		<text x="20" y="28" font-size="16" font-weight="600" fill="` + color.Primary + `">` + escapeXML(trimString(article.Title, 85)) + `</text>
 	  </a>
-	  <text x="20" y="47" font-size="12" fill="#555" font-family="monospace">📅 ` + escapeXML(pubDate)
+	  <text x="20" y="47" font-size="12" fill="` + color.Secondary + `" font-family="monospace">📅 ` + escapeXML(pubDate)
 		if category != "" {
 			svg += ` • ` + escapeXML(category)
 		}
 
 		if desc != "" {
 			svg += `</text>
-				<text x="20" y="67" font-size="13" fill="#444">` + escapeXML(desc) + `</text>
+				<text x="20" y="67" font-size="13" fill="` + color.Text + `">` + escapeXML(desc) + `</text>
 				</g>
 			`
 		} else {
@@ -352,14 +480,18 @@ func setupRouter() *gin.Engine {
 		userData, err := getUserData(user)
 		queryType := c.DefaultQuery("type", "latest")
 		count := c.DefaultQuery("count", "")
+		theme := c.DefaultQuery("theme", string(defaultTheme))
 
 		if err != nil {
 			log.Printf("Error getting user data for %s: %v", user, err)
 			c.String(http.StatusInternalServerError, "Error getting user data: %v", err)
 			return
 		}
-
-		parsedData, parseErr := parseIt(userData, queryFromString(queryType), countFromString(count))
+		color, ok := ThemeColorMap[themeFromString(theme)]
+		if !ok {
+			log.Printf("Color Not Found")
+		}
+		parsedData, parseErr := parseIt(userData, queryFromString(queryType), countFromString(count), color)
 		if parseErr != nil {
 			log.Printf("Error parsing data for %s: %v", user, parseErr)
 			c.String(http.StatusInternalServerError, "Error parsing data: %v", parseErr)
