@@ -474,7 +474,7 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "pong")
 	})
 
-	r.GET("/user/:name", func(c *gin.Context) {
+	r.GET("/medium/user/:name", func(c *gin.Context) {
 		user := c.Params.ByName("name")
 		log.Printf("GET /user/%s called", user)
 		userData, err := getUserData(user)
