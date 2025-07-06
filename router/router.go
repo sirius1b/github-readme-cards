@@ -13,8 +13,6 @@ import (
 
 var db = make(map[string]FeedResponse)
 
-// ------------------------------------------------------------------------------------------------------
-
 func InitRouter(release bool) *gin.Engine {
 	log.Println("setupRouter called")
 	r := gin.Default()
@@ -24,9 +22,9 @@ func InitRouter(release bool) *gin.Engine {
 		log.Println("Running in release mode")
 	}
 
-	r.GET("/ping", func(c *gin.Context) {
-		log.Println("GET /ping called")
-		c.String(http.StatusOK, "pong")
+	r.GET("/", func(c *gin.Context) {
+		log.Println("GET / called")
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(HomePage()))
 	})
 
 	r.GET("/medium/user/:name", func(c *gin.Context) {
@@ -55,6 +53,11 @@ func InitRouter(release bool) *gin.Engine {
 			return
 		}
 		c.Data(http.StatusOK, "image/svg+xml", []byte(parsedData))
+	})
+
+	r.NoRoute(func(ctx *gin.Context) {
+		log.Println("No route matched, redirecting to home page")
+		ctx.Redirect(http.StatusMovedPermanently, "/")
 	})
 
 	return r

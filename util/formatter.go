@@ -213,3 +213,119 @@ func escapeXML(s string) string {
 	}
 	return string(buf)
 }
+
+func HomePage() string {
+	return `
+	<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GitHub Readme Medium Cards</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>GitHub Readme Medium Cards</strong></li>
+    </ul>
+    <ul>
+      <li><a href="https://github.com/sirius1b/github-readme-cards" target="_blank">GitHub</a></li>
+      <li><a href="#usage">Usage</a></li>
+      <li><a href="#themes" role="button">Themes</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="grid">
+      <section>
+        <hgroup>
+          <h2>✨ Embed Your Medium Blog in Your GitHub Profile</h2>
+          <h3>Auto-updating, themed blog cards for your GitHub README</h3>
+        </hgroup>
+        <p>
+          This tool lets you showcase your latest Medium articles directly in your GitHub profile using a styled, minimal SVG card.
+          Just copy the usage URL and customize it with your Medium username and preferred theme.
+        </p>
+
+        <h3 id="usage">🔧 Usage</h3>
+        <p>Use this endpoint:</p>
+        <pre><code>https://github-readme-cards.vercel.app/medium/user/&lt;username&gt;?count=&lt;count&gt;&theme=&lt;theme&gt;</code></pre>
+
+        <h4>Parameters:</h4>
+        <ul>
+          <li><code>username</code>: Your Medium username (e.g. <code>lav.nya.verma</code>)</li>
+          <li><code>count</code>: Number of posts to display (1-10)</li>
+          <li><code>theme</code>: Visual theme for the card</li>
+        </ul>
+
+        <h4>Example:</h4>
+        <pre><code>https://github-readme-cards.vercel.app/medium/user/lav.nya.verma?count=5&theme=tokyonight</code></pre>
+
+        <h3 id="themes">🎨 Available Themes</h3>
+        <p>Choose from a range of popular developer themes:</p>
+
+        <div class="grid">
+          <div>
+            <strong>🌞 Light Themes</strong>
+            <ul>
+              <li><code>solarizedlight</code></li>
+              <li><code>githublight</code></li>
+              <li><code>rosepinedawn</code></li>
+              <li><code>quietlight</code></li>
+            </ul>
+          </div>
+          <div>
+            <strong>🌙 Dark Themes</strong>
+            <ul>
+              <li><code>dracula</code></li>
+              <li><code>gruvbox</code></li>
+              <li><code>nord</code></li>
+              <li><code>onedark</code></li>
+              <li><code>monokai</code></li>
+              <li><code>tokyonight</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>🖼 Preview</h3>
+        <p>Paste the URL in your browser or embed in your README:</p>
+        <pre><code>![Medium Blog](https://github-readme-cards.vercel.app/medium/user/lav.nya.verma?count=5&theme=onedark)</code></pre>
+        <img src="https://github-readme-cards.vercel.app/medium/user/lav.nya.verma?count=3&theme=onedark" alt="Preview" style="max-width: 100%; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);" />
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Feature Request Section -->
+  <section aria-label="Feature Request">
+    <div class="container">
+      <article>
+        <hgroup>
+          <h2>💡 Have a Feature Request or Bug Report?</h2>
+          <h3>Open an issue on the GitHub repo</h3>
+        </hgroup>
+        <p>
+          We welcome contributions, improvements, and feedback! If you have ideas for new features or spot any bugs, click the button below to submit an issue.
+        </p>
+        <a href="https://github.com/sirius1b/github-readme-cards/issues" class="contrast" role="button" target="_blank">Submit an Issue</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="container">
+    <small>
+      <a href="https://github.com/sirius1b/github-readme-cards">GitHub Repo</a> • 
+      <a href="https://vercel.com">Powered by Vercel</a>
+    </small>
+  </footer>
+
+</body>
+</html>
+
+	`
+}
