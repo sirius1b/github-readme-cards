@@ -39,6 +39,15 @@ func GetUserData(user string, db map[string]FeedResponse) (RSS2JSONResponse, err
 			log.Printf("Error decoding JSON for user %s: %v", user, err)
 			return RSS2JSONResponse{}, err
 		}
+		// Fetch and update feed image to base64
+		if feedResponse.Feed.Image != "" {
+			base64Img, err := FetchImageAsBase64(feedResponse.Feed.Image)
+			if err != nil {
+				log.Printf("Error fetching image as base64 for user %s: %v", user, err)
+			} else {
+				feedResponse.Feed.Image = base64Img
+			}
+		}
 		db[user] = FeedResponse{
 			Rss:       feedResponse,
 			UpdatedAt: time.Now(),
