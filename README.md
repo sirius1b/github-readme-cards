@@ -130,4 +130,4 @@ It really helps and keeps the project going!
 
 ---
 
-Made with ❤️ by [sirius1b](https://github.com/yourusername)
+Made with ❤️ by [sirius1b](https://github.com/sirius1b)
